@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Liga LegendsRD – MLB The Show 25</title>
+
+  <!-- SEO / Social -->
+  <meta name="description" content="Liga LegendsRD · Tabla de posiciones, cronograma y reglas – MLB The Show 25">
+  <meta property="og:title" content="Liga LegendsRD – MLB The Show 25">
+  <meta property="og:description" content="Tabla de posiciones (11 columnas), cronograma y reglas.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="img/og-card.png">
+  <meta name="theme-color" content="#0a1d44">
+  <link rel="icon" href="img/favicon.png" />
+
+  <style>
+    :root{
+      --mlb-navy:#0a1d44; --mlb-red:#c0142f; --mlb-blue:#1a3a74;
+      --mlb-white:#ffffff; --mlb-gold:#d4af37;
+      --bg:#070f22; --muted:#a9b5d9; --card-border: rgba(255,255,255,.08);
+      --table-head:#101a3b; --qualified: rgba(26,58,116,.25);
+    }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:linear-gradient(#070f22,#0a1430);color:var(--mlb-white);}
+    .container{max-width:1200px;margin:auto;padding:20px}
+    header{position:sticky;top:0;z-index:10;background:rgba(7,15,34,.7);backdrop-filter:blur(6px);border-bottom:1px solid var(--card-border)}
+    .nav{display:flex;align-items:center;gap:14px;min-height:56px;flex-wrap:wrap}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+    .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--mlb-red),var(--mlb-gold))}
+    .nav-links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
+    .nav-links a{color:#dfe6ff;text-decoration:none;font-weight:700}
+    h1{margin:10px 0 6px;background:linear-gradient(180deg,#fff,#9fb5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{display:flex;align-items:center;gap:10px;color:var(--mlb-red);font-weight:800;margin:0 0 8px}
+    .muted{color:var(--muted)}
+    .card{background:rgba(255,255,255,.05);border:1px solid var(--card-border);border-radius:14px;padding:16px;margin-top:12px}
+
+    /* Controles */
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .controls .spacer{flex:1}
+    .search{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.06);border:1px solid var(--card-border);border-radius:10px;padding:6px 10px}
+    .search input{background:transparent;border:0;outline:none;color:#fff;min-width:180px}
+    .toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:#dfe6ff}
+    .toggle input{transform:scale(1.2)}
+
+    /* Tabla */
+    .table-wrap{overflow-x:auto;border:1px solid var(--card-border);border-radius:10px}
+    table{width:100%;border-collapse:collapse;min-width:1050px}
+    th,td{padding:10px;border-bottom:1px solid var(--card-border);text-align:left}
+    thead th{background:var(--table-head);color:#eaf0ff;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none}
+    td.num, th.num{text-align:center;white-space:nowrap}
+    tr.qualified{background:var(--qualified)}
+    tr.cut td{border-bottom:2px dashed #ffd36b !important}
+    .seed-badge{font-size:11px;padding:2px 6px;border-radius:999px;background:#122460;border:1px solid rgba(255,255,255,.2);color:#dfe6ff;margin-left:6px}
+    .th-sort::after{content:" ⇅";opacity:.6;font-size:12px}
+    .th-sort.asc::after{content:" ↑"}
+    .th-sort.desc::after{content:" ↓"}
+
+    .btn{border:1px solid var(--card-border);background:#0b1230;color:#eaf0ff;padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn:hover{filter:brightness(1.1)}
+
+    /* Cronograma */
+    .timeline{margin-top:10px}
+    .tl-bar{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+    .tl-fill{position:absolute;top:0;left:0;bottom:0;background:linear-gradient(90deg,var(--mlb-blue),var(--mlb-red))}
+    .tl-today{position:absolute;top:-6px;width:2px;background:#ffd36b;height:22px;box-shadow:0 0 0 4px rgba(212,175,55,.2)}
+    .tl-today-label{position:absolute;top:-30px;transform:translateX(-50%);font-size:11px;
+      background:rgba(212,175,55,.15);color:#ffeaa8;border:1px solid rgba(212,175,55,.5);
+      padding:2px 6px;border-radius:6px;white-space:nowrap}
+    .tl-marks{position:relative;height:22px;margin-top:8px;font-size:11px;color:#cfd7ff}
+    .tl-marks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+
+    footer{color:#93a2e6;font-size:13px;padding:26px 0 36px;text-align:center}
+    @media(max-width:720px){.container{padding:14px}.tl-marks{font-size:10px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><div class="logo"></div> Liga LegendsRD · MLB The Show 25</div>
+      <nav class="nav-links">
+        <a href="#tabla">Posiciones</a>
+        <a href="#localia">Localía</a>
+        <a href="#cronograma">Cronograma</a>
+        <a href="#reglas">Reglamento</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>¡Bienvenidos a la liga!</h1>
+    <p class="muted">Temporada 1 · Inicio: Sábado 23 de Agosto de 2025 · Temporada Regular: 12 juegos (6 Local / 6 Visitante)</p>
+  </div>
+
+  <main class="container">
+    <section id="tabla" class="card">
+      <div class="subtitle">
+        <span>Tabla de Posiciones (11 columnas)</span>
+        <div class="controls">
+          <div class="search">
+            🔎 <input id="q" placeholder="Buscar equipo o participante..." />
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="toggleDiff" checked />
+            Mostrar “Dif vs líder (PTS)”
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="toggleAuto" />
+            Auto-actualizar cada 60s
+          </label>
+          <button class="btn" id="btnRefresh">Actualizar ahora</button>
+          <span class="spacer"></span>
+          <span class="muted" id="lastUpdate"></span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="tblStandings">
+          <thead>
+            <tr>
+              <th class="th-sort" data-key="equipo">Equipo</th>
+              <th class="th-sort" data-key="participante">Participante</th>
+              <th class="num th-sort" data-key="prog" data-numeric>Prog</th>
+              <th class="num th-sort" data-key="j" data-numeric>J</th>
+              <th class="num th-sort" data-key="g" data-numeric>G</th>
+              <th class="num th-sort" data-key="p" data-numeric>P</th>
+              <th class="num th-sort" data-key="por_jugar" data-numeric>Por jugar</th>
+              <th class="num th-sort" data-key="pts" data-numeric>PTS</th>
+              <th class="num th-sort" data-key="mg" data-numeric>MG</th>
+              <th class="num th-sort" data-key="mr" data-numeric>MR</th>
+              <th class="num th-sort" data-key="ab" data-numeric>AB</th>
+              <th class="num th-sort" data-key="dif" data-numeric id="colDif">Dif</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin-top:8px">
+        Programados = 12 · Puntuación: W +3, L +2, Mercy W +4, Mercy L +1, Abandono 0.
+      </p>
+    </section>
+
+    <section id="localia" class="card">
+      <h2 class="subtitle">¿Van a jugar un juego? ¿Quién es Local?</h2>
+      <div class="row">
+        <select id="selEquipoA"><option value="">— Equipo A —</option></select>
+        <select id="selEquipoB"><option value="">— Equipo B —</option></select>
+      </div>
+      <div class="result" id="localiaResultado">Selecciona dos equipos…</div>
+    </section>
+
+    <section id="cronograma" class="card">
+      <h2 class="subtitle">Cronograma de Temporada Regular</h2>
+      <p class="muted" id="tlRangeTxt"></p>
+      <div class="timeline">
+        <div class="tl-bar" id="tlBar">
+          <div class="tl-fill" id="tlFill"></div>
+          <div class="tl-today" id="tlToday">
+            <span class="tl-today-label" id="tlTodayLbl">Hoy</span>
+          </div>
+        </div>
+        <div class="tl-marks" id="tlMarks"></div>
+      </div>
+    </section>
+
+    <section id="reglas" class="card">
+      <h2 class="subtitle">📜 Reglamento – Liga MLB The Show 25 (Serie del Caribe)</h2>
+      <div class="muted" style="white-space:pre-line">
+1️⃣ Participantes y Temporada
+• La liga es para 13 jugadores.
+• Se juega 1 partido contra cada equipo → 12 juegos en total (6 de local y 6 de visitante).
+• Duración: del sábado 23 de agosto al domingo 7 de septiembre (2 semanas).
+• Dificultad: Legend.
+• Balks activados → pausa de 1–2 segundos entre lanzamientos.
+
+2️⃣ Clasificación a Postemporada
+• Clasifican los 8 primeros de la tabla (por puntos).
+• Sistema de puntos:
+  🏆 Victoria por mercy rule → +4 pts
+  🏆 Victoria normal → +3 pts
+  ❌ Derrota normal → +2 pts
+  ❌ Derrota por mercy rule → +1 pt
+  🚫 No jugar o abandonar antes del 9no inning → 0 pts
+
+3️⃣ Localía / Visitante
+• Consulta en la página web de la liga quién es home club o visitante en cada partido.
+
+4️⃣ Pausas durante el juego
+• Motivos válidos: llamada, urgencia en casa, estrategia (bullpen o emergente).
+• Debes avisar primero a tu rival por WhatsApp (preferiblemente en privado).
+• Si vas a poner una pausa relativamente larga o realizar pausas repetitivas por estrategia, lo primero es usar el chat privado de Discord para avisar a tu oponente y explicar la situación.
+• ⚠️ Si no recurres al chat como primer contacto, tu rival puede reclamar el juego por tiempo transcurrido.
+• Si no avisas y se acaba el tiempo, tu rival también puede atribuirse la victoria.
+
+5️⃣ Intercambios de jugadores
+• Todas las propuestas deben hacerse en el grupo de WhatsApp.
+• Se permiten cambios libres, pero justos y transparentes.
+• Cambios fuera del grupo o sospechosos = trampa → expulsión.
+
+6️⃣ Partidas congeladas o desconectadas
+• Juego congelado (bug) → se reporta en el grupo y se repite, sin importar inning o marcador.
+• Desconexión por internet → se reporta en el grupo. Decide San Diego Studios (normalmente derrota al desconectado).
+• Excepción: si el juego recién empieza (0–0, nadie en base) → se resetea o decide el Administrador.
+
+7️⃣ Reglas de cambios en juego
+• Cambios de pitcher o emergente solo con conteo 0–0.
+• Si se viola la regla:
+  ⚾ Pitcher cambiado ≠ 0–0 → debe dar base por bolas.
+  ⚾ Bateador cambiado ≠ 0–0 → se marca out automático.
+• En temporada regular: abridores solo pueden ser reemplazados por relevistas.
+• En postemporada: sí se puede relevar con abridores.
+
+8️⃣ Configuración de partidas
+• El que crea la partida debe fijar: mes de octubre y hora 7:00 PM (evitar reflejos de sol que dificultan el bateo).
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Hecho con cariño para la liga ✨ ·
+    <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a> ·
+    <a href="https://www.pythonanywhere.com/" target="_blank" rel="noreferrer">PythonAnywhere</a>
+  </footer>
+
+  <!-- 1) Soporta abrir con file:// -->
+  <script src="standings.js"></script>
+
+<script>
+/* ===== Config ===== */
+const DAY=86400000;
+const START=new Date(2025,7,23);
+const END  =new Date(2025,8,7);
+const PROGRAMADOS = 12;
+
+/* ===== Helpers ===== */
+function fmt(d){return d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
+const keyPair=(a,b)=>[a,b].sort().join("|");
+
+/* ===== Localía ===== */
+let TEAMS = [];
+let homeAwayMap = {};
+function buildRoundRobinBase(teams){
+  const N=teams.length,idx=[...Array(N).keys()];let arr=idx.slice();
+  const rounds=N-1,base=[];
+  for(let r=0;r<rounds;r++){
+    for(let i=0;i<Math.floor(N/2);i++){
+      const a=arr[i], b=arr[N-1-i];
+      if(a!==undefined&&b!==undefined){
+        const even=r%2===0, h=even?a:b, aw=even?b:a;
+        base.push({home:teams[h],away:teams[aw]});
+      }
+    }
+    const fixed=arr[0],rest=arr.slice(1);rest.unshift(rest.pop());arr=[fixed,...rest];
+  }
+  return base;
+}
+function ensureAllPairsBalanced(){
+  const teams=TEAMS; homeAwayMap={}; const seed=buildRoundRobinBase(teams);
+  seed.forEach(m=>{const k=keyPair(m.home,m.away); if(!homeAwayMap[k]) homeAwayMap[k]=m;});
+  const counts=Object.fromEntries(teams.map(t=>[t,0]));
+  for(let i=0;i<teams.length;i++)for(let j=i+1;j<teams.length;j++){
+    const A=teams[i],B=teams[j],k=keyPair(A,B);
+    if(!homeAwayMap[k]){let home=counts[A]<=counts[B]?A:B; homeAwayMap[k]={home,away:home===A?B:A}; counts[home]++; }
+  }
+}
+function poblarSelects(){
+  const selA=document.getElementById('selEquipoA'), selB=document.getElementById('selEquipoB');
+  const teams=TEAMS.slice().sort((x,y)=>x.localeCompare(y));
+  selA.innerHTML='<option value="">— Equipo A —</option>'; selB.innerHTML='<option value="">— Equipo B —</option>';
+  teams.forEach(t=>{ selA.add(new Option(t,t)); selB.add(new Option(t,t)); });
+  const sync=()=>{
+    const a=selA.value,b=selB.value;
+    [...selA.options].forEach(o=> o.disabled = o.value && o.value===b);
+    [...selB.options].forEach(o=> o.disabled = o.value && o.value===a);
+  };
+  selA.addEventListener('change', ()=>{ sync(); consultarLocalia(); });
+  selB.addEventListener('change', ()=>{ sync(); consultarLocalia(); });
+  sync();
+}
+function consultarLocalia(){
+  const a=selEquipoA.value, b=selEquipoB.value, out=document.getElementById('localiaResultado');
+  if(!a||!b){ out.textContent='Selecciona dos equipos'; return; }
+  if(a===b){ out.textContent='Debes elegir equipos distintos'; return; }
+  const m=homeAwayMap[keyPair(a,b)];
+  out.innerHTML = `<span class="local">Local: ${m.home}</span> <span class="divider">—</span> <span class="visit">Visitante: ${m.away}</span>`;
+}
+
+/* ===== Cronograma ===== */
+function renderTimeline(){
+  const total=END-START, now=new Date();
+  const clamped=Math.min(Math.max(now,START),END), pct=((clamped-START)/total)*100;
+  document.getElementById('tlFill').style.width=pct+"%";
+  const today=document.getElementById('tlToday'); today.style.left=pct+"%";
+  document.getElementById('tlTodayLbl').textContent="Hoy";
+  const daysLeft=Math.max(0,Math.ceil((END-now)/DAY));
+  document.getElementById('tlRangeTxt').textContent=`Del ${fmt(START)} al ${fmt(END)} · Faltan ${daysLeft} día${daysLeft===1?'':'s'}`;
+  const marks=document.getElementById('tlMarks'); marks.innerHTML='';
+  for(let d=new Date(START); d<=END; d=new Date(+d+2*DAY)){
+    const pos=((d-START)/total)*100;
+    marks.insertAdjacentHTML('beforeend', `<span style="left:${pos.toFixed(2)}%">${fmt(d)}</span>`);
+  }
+}
+
+/* ===== Tabla ===== */
+let RAW_ROWS = [];
+let SORT = {key: "pts", dir: "desc"};
+let AUTO_TIMER = null;
+
+function computeDiff(rows){
+  if(!rows.length) return rows;
+  const leader = rows[0].pts;
+  return rows.map(r => ({...r, dif: (leader - r.pts)}));
+}
+function applyFilter(rows, q){
+  if(!q) return rows;
+  const s = q.toLowerCase();
+  return rows.filter(r => (r.equipo+" "+r.participante).toLowerCase().includes(s));
+}
+function renderTable(){
+  const showDiff = document.getElementById("toggleDiff").checked;
+  const q = document.getElementById("q").value.trim();
+  let rows = computeDiff(RAW_ROWS);
+  rows = applyFilter(rows, q);
+
+  // orden
+  rows.sort((a,b)=>{
+    const ka = a[SORT.key], kb = b[SORT.key];
+    const mul = SORT.dir === "asc" ? 1 : -1;
+    if(typeof ka === "number" && typeof kb === "number") return mul * (ka - kb);
+    return mul * (String(ka).localeCompare(String(kb)));
+  });
+
+  const tbody = document.querySelector("#tblStandings tbody");
+  tbody.innerHTML = "";
+  rows.forEach((r, idx) => {
+    const qualified = idx < 8 ? "qualified" : "";
+    const cut = idx === 7 ? "cut" : "";
+    const seedLabel = idx < 4 ? "Seed alto" : (idx < 8 ? "Wild card" : "");
+    const badge = seedLabel ? `<span class="seed-badge">${seedLabel}</span>` : "";
+    tbody.insertAdjacentHTML("beforeend", `
+      <tr class="${qualified} ${cut}">
+        <td>${r.equipo} ${badge}</td>
+        <td>${r.participante}</td>
+        <td class="num">${r.prog}</td>
+        <td class="num">${r.j}</td>
+        <td class="num">${r.g}</td>
+        <td class="num">${r.p}</td>
+        <td class="num">${r.por_jugar}</td>
+        <td class="num">${r.pts}</td>
+        <td class="num">${r.mg}</td>
+        <td class="num">${r.mr}</td>
+        <td class="num">${r.ab}</td>
+        <td class="num">${showDiff ? r.dif : ""}</td>
+      </tr>
+    `);
+  });
+
+  TEAMS = rows.map(r => r.equipo);
+  ensureAllPairsBalanced();
+  poblarSelects();
+}
+
+function bindSorting(){
+  document.querySelectorAll("th.th-sort").forEach(th=>{
+    th.classList.add("th-sort");
+    th.addEventListener("click", ()=>{
+      const key = th.dataset.key;
+      if(SORT.key === key){
+        SORT.dir = (SORT.dir === "asc") ? "desc" : "asc";
+      } else {
+        SORT.key = key;
+        SORT.dir = th.dataset.numeric ? "desc" : "asc";
+      }
+      document.querySelectorAll("th.th-sort").forEach(x=>x.classList.remove("asc","desc"));
+      th.classList.add(SORT.dir);
+      renderTable();
+    });
+  });
+}
+
+/* ===== Carga de datos ===== */
+async function fetchJSONwithTimeout(url, ms=10000){
+  return Promise.race([
+    fetch(url).then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }),
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), ms))
+  ]);
+}
+async function loadStandings(){
+  // 1) Si está precargado por <script src="standings.js">
+  if(window.STANDINGS){
+    updateFromPayload(window.STANDINGS);
+    return;
+  }
+  // 2) Si estás sirviendo por http:
+  try{
+    const data = await fetchJSONwithTimeout("./standings.json?ts=" + Date.now(), 10000);
+    updateFromPayload(data);
+  }catch(err){
+    const tbody = document.querySelector("#tblStandings tbody");
+    tbody.innerHTML = `<tr><td colspan="12">No se pudo cargar la tabla (${err.message}). Asegúrate de tener <code>standings.js</code> o de servir por http.</td></tr>`;
+  }
+}
+function updateFromPayload(payload){
+  RAW_ROWS = payload.rows || [];
+  // saneo mínimo por si falta "por_jugar"
+  RAW_ROWS = RAW_ROWS.map(r => ({...r, por_jugar: (r.por_jugar ?? Math.max(0, PROGRAMADOS - (r.j ?? 0)))}));
+  renderTable();
+  const lu = document.getElementById("lastUpdate");
+  lu.textContent = payload.generated_at ? ("Actualizado: " + new Date(payload.generated_at).toLocaleString("es-ES")) : "";
+}
+
+/* ===== Auto-Refresh ===== */
+function setupAuto(){
+  const chk = document.getElementById("toggleAuto");
+  const arm = ()=>{
+    if(AUTO_TIMER){ clearInterval(AUTO_TIMER); AUTO_TIMER = null; }
+    if(chk.checked){
+      AUTO_TIMER = setInterval(()=>loadStandings(), 60000);
+    }
+  };
+  chk.addEventListener("change", arm);
+  arm();
+}
+
+/* ===== Boot ===== */
+function boot(){
+  renderTimeline();
+  bindSorting();
+  loadStandings();
+
+  document.getElementById("btnRefresh").addEventListener("click", () => loadStandings());
+  document.getElementById("q").addEventListener("input", renderTable);
+  document.getElementById("toggleDiff").addEventListener("change", renderTable);
+  setupAuto();
+}
+boot();
+</script>
+</body>
+</html>
